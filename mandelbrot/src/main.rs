@@ -1,4 +1,5 @@
 extern crate image;
+extern crate crossbeam;
 extern crate num;
 
 use image::ColorType;
@@ -13,9 +14,9 @@ fn main() {
 
     if args.len() != 5 {
         writeln!(std::io::stderr(),
-                "Usage: mandelbrot FILE PIXELS UPPERLEFT LOWERRIGHT").unwrap();
+        "Usage: mandelbrot FILE PIXELS UPPERLEFT LOWERRIGHT").unwrap();
         writeln!(std::io::stderr(),
-                "Example: {} mandel.png 1000x750 -1.20,0.35 -1,0.20", args[0]).unwrap();
+        "Example: {} mandel.png 1000x750 -1.20,0.35 -1,0.20", args[0]).unwrap();
         std::process::exit(1);
     }
 
@@ -25,7 +26,29 @@ fn main() {
 
     let mut pixels = vec![0; bounds.0 * bounds.1];
 
-    render(&mut pixels, bounds, upper_left, lower_right);
+    let threads = 8;
+    let rows_per_band = bounds.1 / threads + 1;
+
+    {
+        let bands: Vec<&mut [u8]> = pixels.chunks_mut(rows_per_band * bounds.0).collect();
+        crossbeam::scope(|spawner| {
+            // Each image band will be given to an independent thread which will generate the
+            // corresponding image band pixels.
+            for (i, band) in bands.into_iter().enumerate() {
+                let top = rows_per_band * i;
+                let height = band.len() / bounds.0;
+                let band_bounds = (bounds.0, height);
+                let band_upper_left = pixel_to_point(bounds, (0, top), upper_left, lower_right);
+                let band_lower_right = pixel_to_point(bounds, (bounds.0, top + height), upper_left, lower_right);
+
+                // Here we generate a new thread per each iteration (per band)
+                spawner.spawn(move || {
+                    render(band, band_bounds, band_upper_left,band_lower_right);
+                });
+            }
+        });
+    }
+
 
     write_image(&args[1], &pixels, bounds).expect("error writing PNG file");
 }
@@ -113,9 +136,9 @@ fn pixel_to_point(bounds: (usize, usize),
 #[test]
 fn test_pixel_to_point() {
     assert_eq!(pixel_to_point((100, 100), (25, 75),
-        Complex { re: -1.0, im: 1.0 },
-        Complex { re: 1.0, im: -1.0 }),
-        Complex { re: -0.5, im: -0.5 });
+    Complex { re: -1.0, im: 1.0 },
+    Complex { re: 1.0, im: -1.0 }),
+    Complex { re: -0.5, im: -0.5 });
 }
 
 /// Render a rectangle of the Mandelbrot set into a buffer of pixels.
