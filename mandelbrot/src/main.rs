@@ -1,4 +1,9 @@
+extern crate image;
 extern crate num;
+
+use image::ColorType;
+use image::png::PNGEncoder;
+use std::fs::File;
 use num::Complex;
 use std::str::FromStr;
 
@@ -104,4 +109,18 @@ fn render(pixels: &mut [u8],
             };
         }
     }
+}
+
+/// Write the buffer `pixels`, whose dimensions are given by `bounds`, to 
+/// the file named `filename`.
+fn write_image(filename: &str, pixels: &[u8], bounds: (usize, usize))
+    -> Result<(), std::io::Error>
+{
+    let output = File::create(filename)?; // Raise error (if any) to caller scope
+
+    let encoder = PNGEncoder::new(output);
+    encoder.encode(&pixels,
+                   bounds.0 as u32, bounds.1 as u32,
+                   ColorType::Gray(8))?; // Raise error (if any) to caller scope
+    Ok(())
 }
