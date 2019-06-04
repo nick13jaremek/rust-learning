@@ -105,5 +105,20 @@ fn main() {
     let single_item_tuple = ("Lonely hears",);
     println!("Single item tuple: {:?}", single_item_tuple);
     
+    println!();
+    println!("ARRAYS");
+    println!("--------------------------------------------------");
+
+    // Arrays are used to store a fixed-length list of items
+    let lazy_caterer: [u32; 6] = [1, 2, 4, 7, 11, 16];
+    assert_eq!(lazy_caterer[3], 7); // Index-based access
+    println!("Array of 6 items: {:?}", lazy_caterer);
+
+    let bool_list = [true; 10]; // Array of 10 items, all true boolean values
+    println!("Bool list: {:?}", bool_list);
+
+    let mut chaos = [3, 5, 4, 1, 2];
+    chaos.sort(); // Can be sorted because variable is mutable
+    println!("Sorted chaos: {:?}", chaos);
 
 }
