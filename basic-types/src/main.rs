@@ -74,4 +74,36 @@ fn main() {
 
     assert_eq!(5f32.sqrt() * 5f32.sqrt(), 5.);
 
+    // BOOLEAN
+    assert_eq!(false as i32, 0);
+    assert_eq!(true as i32, 1);
+    // Cannot convert the other way around: 0 as bool.
+    
+    println!();
+    println!("CHARACTERS");
+    println!("--------------------------------------------------");
+
+    let single_char = 'X'; // Chars are enclosed in SINGLE QUOTES, NOT DOUBLE QUOTES
+    println!("Single char: {}", single_char);
+
+    let unicode_char = '∭';
+    println!("Unicode char: {}", unicode_char);
+    
+    // TUPLES
+    println!();
+    println!("TUPLES");
+    println!("--------------------------------------------------");
+
+    let text = "I see the eigenvalue in thine eye";
+    let (head, tail) = text.split_at(21);
+    assert_eq!(head, "I see the eigenvalue ");
+    assert_eq!(tail, "in thine eye");
+
+    let tuple_value = ("Brazil", 1985); // Type (&str, <numeric>)
+    println!("Tuple value: {:?}", tuple_value);
+
+    let single_item_tuple = ("Lonely hears",);
+    println!("Single item tuple: {:?}", single_item_tuple);
+    
+
 }
