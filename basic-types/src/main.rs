@@ -121,4 +121,40 @@ fn main() {
     chaos.sort(); // Can be sorted because variable is mutable
     println!("Sorted chaos: {:?}", chaos);
 
+    println!();
+    println!("VECTORS");
+    println!("--------------------------------------------------");
+
+    // Vectors are used as dynamic arrays. Allocation is done on the HEAP.
+    let mut v = vec![2, 3, 5, 7]; // Useful macro to create vector
+    v.push(11); // Can push items to vector because it is a vector AND it is a mutable variable
+    println!("Vector: {:?}", v);
+
+    let mut vector_str = Vec::new();
+    vector_str.push("step");
+    vector_str.push("on");
+    vector_str.push("floor");
+    assert_eq!(vector_str, vec!["step", "on", "floor"]);
+
+    // Can create vectors with capacity specified up front
+    let mut vector_with_capacity = Vec::with_capacity(2);
+    assert_eq!(vector_with_capacity.len(), 0);
+    assert_eq!(vector_with_capacity.capacity(), 2);
+
+    vector_with_capacity.push(1);
+    vector_with_capacity.push(2);
+    assert_eq!(vector_with_capacity.len(), 2);
+    assert_eq!(vector_with_capacity.capacity(), 2);
+
+    // When capacity is surpassed, vector is reallocated with twice the capacity
+    vector_with_capacity.push(3);
+    vector_with_capacity.push(4);
+    assert_eq!(vector_with_capacity.len(), 4);
+    assert_eq!(vector_with_capacity.capacity(), 4);
+
+    // Popping items from vector
+    let mut people = vec!["carmen", "miranda"];
+    assert_eq!(people.pop(), Some("miranda")); // Note the return type of pop() is Option<T> (Some(value), None)
+    assert_eq!(people.pop(), Some("carmen"));
+    assert_eq!(people.pop(), None);
 }
