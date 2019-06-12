@@ -157,4 +157,47 @@ fn main() {
     assert_eq!(people.pop(), Some("miranda")); // Note the return type of pop() is Option<T> (Some(value), None)
     assert_eq!(people.pop(), Some("carmen"));
     assert_eq!(people.pop(), None);
+
+    // SLICES
+    println!();
+    println!("SLICES");
+    println!("--------------------------------------------------");
+    let v_vec: Vec<f64> = vec![0.0, 0.707, 1.0, 0.707];
+    let a_arr: [f64; 4] = [0.0, 0.707, 1.0, 0.707];
+
+    // These are slice references to vector/array references
+    let sv: &[f64] = &v_vec; // This is a slice to a vector
+    let sa: &[f64] = &a_arr; // This is a slice to an array
+    println!("Vector slice: {:?}", sv);
+    println!("Array slice: {:?}", sa);
+
+    // STRINGS
+    println!();
+    println!("STRINGS");
+    println!("--------------------------------------------------");
+
+    // This is a string literal. It must be enclosed in double quotes.
+    let speech = "\"Ouch!\" said the well.\n";
+    println!("String literal: {}", speech);
+
+    // Raw strings are defined by preprending their values with 'r'
+    let default_win_install_path = r"C:\Program Files\Gorillas";
+    println!("Raw string: {}", default_win_install_path);
+    println!(r###"
+        This raw string started with 'r###'.
+        Therefore it does not end until we reach a quote mark ('"') followed immediately by three pound signs ('###'):"###);
+
+    // Byte strings: slices of u8 values, therefore bytes, not Unicode text.
+    let method = b"GET";
+    assert_eq!(method, &[b'G', b'E', b'T']);
+
+    // A String has a resizable buffer holding UTF-8 text.
+    // It can be thought of as a Vec<u8> that is guaranteed to hold well-formed UTF-8.
+    let noodles = "noodles".to_string(); // String literal converted to String
+    let oodles = &noodles[1..]; // &str: pointer to a String value
+    let poodles = "þoø→"; // String literal or &str
+    println!("Oodles: {:?}", oodles);
+    println!("Poodles: {:?}", poodles);
+    // &str is more appropriate for function arguments when the caller should be allowed to pass
+    // either an &str or a String.
 }
